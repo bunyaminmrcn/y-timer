@@ -1,0 +1,52 @@
+/* styles.css */
+
+/* Add styles here to customize the appearance of your app */
+html {
+	/*
+	overflow: hidden;
+	*/
+}
+
+body {
+	/*background: yellow;*/
+	-webkit-app-region: drag;
+	overflow: hidden;
+}
+
+.mainText {
+	width: 100%;
+	height: calc(100% - 32px);
+	position: absolute;
+	top: 32px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	background-color: transparent;
+	text-wrap: wrap;
+	text-align: unset;
+	text-emphasis: unset;
+	border: none;
+}
+.mainText:focus {
+	outline: none;
+}
+
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+	background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+	background: #888; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+	background: #555; 
+  }
