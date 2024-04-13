@@ -4,7 +4,9 @@ const path = require("node:path");
 const { serverUp } = require("./server");
 const { init } = require("./manager");
 const { Initializer } = require('./models/base/WindowManager');
-const Emitter = require('./client/src/ee');
+//const SHMLoader = require("./client/src/ee");
+const SHMLoader  = require('./client/src/ee');
+
 const StoreEmitter = require('./client/src/se');
 
 let tray = null
@@ -14,7 +16,8 @@ async function createWindow() {
   const primaryDisplay = screen.getPrimaryDisplay();
   const { width, height } = primaryDisplay.workAreaSize;
   const info = await serverUp();
-  init();
+  
+  //init();
   
 
   mainWindow = new BrowserWindow({ width, height, show: false });

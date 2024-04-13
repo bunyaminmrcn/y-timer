@@ -1,7 +1,6 @@
 //
 const { Server } = require('socket.io');
 const {Timer}  = require('./models/base/Timer');
-const Emitter = require('./client/src/ee');
 const { shm  } = global;
 const store = require('./client/src/se');
 
@@ -35,7 +34,7 @@ const bindIO = (server) => {
             
         }
         socket.on('notify', (data) => {
-            Emitter.emit('on_notify', data)
+            //Emitter.emit('on_notify', data)
         })
     });
 }

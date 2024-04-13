@@ -14,9 +14,8 @@ const knexORM = require('../../conf/db-init');
 const path = require('path');
 const store = require('../../client/src/se');
 
-const { shm } = global;
+const { v4 } = require('uuid');
 
-const { v4 } = require('uuid')
 class WM {
     state = {
         isAsked: false,
@@ -26,8 +25,10 @@ class WM {
     }
     confs = [];
     mainWindow = null;
+    shm = null;
     constructor(mainWindow) {
         this.mainWindow = mainWindow;
+       
         this.loadTables();
     }
     async loadTables() {
@@ -54,7 +55,8 @@ class WM {
                             nodeIntegration: true,
                             contextIsolation: false,
                             preload: path.join(app.getAppPath(), 'preload.js')
-                        }
+                        },
+                        
                     })
                     //noteWindow.id = i;
 
@@ -62,7 +64,7 @@ class WM {
                     const v4_ = v4()
                     this.confs.push({ uniqueId: v4_, payload: { title, textContent } })
                     noteWindow.webContents.on("did-finish-load", () => {
-                        noteWindow.webContents.executeJavaScript("window.uniqueId = '" + v4_ + "'; window[`_`] = '" + v4_ + "'");
+                        noteWindow.webContents.executeJavaScript("window.uniqueId = '" + v4_ + "'; window[`_`] = '" + v4_ + "'")
                     })
 
                     noteWindow.loadURL('http://localhost:3206', {

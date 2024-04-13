@@ -10,17 +10,22 @@
 
 
 const { ipcRenderer } = require('electron')
-const Emitter = require('./client/src/ee');
-const { shm } = global;
+const SHMLoader  = require('./client/src/ee')
+
+
 
 
 window.addEventListener("DOMContentLoaded", (event) => {
 
   const listenerId = setInterval(() => {
     const val = 'uniqueId';
-    if(window[`${val}`]) {
+    
+    const shm = SHMLoader.getInstance();
+
+    if(window[`${val}`] && (shm)) {
       window.clearInterval(listenerId)
-      shm.Emitter.emit('s_sio', {})
+      //console.log({emit: shm})
+      shm.emit('s_sio', {})
     } else {
       console.log("wait for set")
     }

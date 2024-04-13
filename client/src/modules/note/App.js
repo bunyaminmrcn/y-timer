@@ -64,10 +64,10 @@ windowTopBar.style.position = "absolute"
 windowTopBar.style.top = windowTopBar.style.left = 0
 windowTopBar.style.webkitAppRegion = "drag"
 document.body.appendChild(windowTopBar)
-*/
-const { shm, shared_store } = global;
+*/;
 
 const EventListeners = [];
+import { getSioClient, listenEvents } from '../../sio-client';
 
 export default function App({ }) {
   const [markdown, setMarkdown] = useState('*hep*');
@@ -80,28 +80,19 @@ export default function App({ }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [type, setType] = React.useState("overlay");
 
-  let sio;
 
 
 
 
 
   useEffect(() => {
-
-    if (shm) {
-      shm.Emitter.on('s_sio', () => {
-        sio = io(process.env.REACT_APP_SERVER_URL, { query: { uuid: window.uniqueId } })
-        sio.on('connect', () => {
-          console.log('Client Connected')
-        })
-        sio.on('sync_props', (props) => {
-          setTitle_(props.title)
-          setMarkdown(props.textContent)
-        })
-
+    const sio = getSioClient();
+    if(sio) {
+      listenEvents('sync_props', (data) => {
+        setTitle_(data.title)
+        setMarkdown(data.textContent)
       })
     }
-
     return () => {
       if (sio) {
         sio.off('connect');

@@ -1,11 +1,11 @@
-const Emitter = require("./client/src/ee");
+;
 const { Notification } = require("electron");
 const path = require("path");
 
 const os = require('os')
 const init = () => {
   console.log({ init: "Manager initialized" });
-  Emitter.on("on_notify", async (data) => {
+  SHMLoader.getInstance().Emitter?.on("on_notify", async (data) => {
     const notification = new Notification({
       title: "HEllo",
       body: 'World',
@@ -39,15 +39,7 @@ const init = () => {
     //sound.play();
     //const audic = new Audic(path.join(__dirname, 'assets', 'sounds','sound.mp3'));
 
-    notification.on("action", (_, index) => {
-      console.log(_, index);
-    });
-    
-
-    notification.on('click', (_, index) => {
-     console.log({i: _, index})
-    })
-    notification.show();
+  
     // $ mplayer foo.mp3
 
   });
