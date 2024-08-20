@@ -72,6 +72,7 @@ async function createWindow() {
     if(isAsked) {
       console.log("Bye")
       mainWindow.destroy();
+      process.exit();
     } else {
       mainWindow.hide()
     }
@@ -85,7 +86,9 @@ async function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-
+process.on('uncaughtException', (err) => {
+  process.exit();
+})
 if (process.defaultApp) {
   if (process.argv.length >= 2) {
     app.setAsDefaultProtocolClient("timer_app", process.execPath, [
@@ -107,7 +110,8 @@ if (!gotTheLock) {
     app.on("activate", function () {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
-      if (BrowserWindow.getAllWindows().length === 0) createWindow();
+      const isAsked = Initializer.getInstance().getIsAsked()
+      if (BrowserWindow.getAllWindows().length === 0 && isAsked == false) createWindow();
     });
   });
 
