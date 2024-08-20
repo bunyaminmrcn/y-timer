@@ -1,4 +1,4 @@
-# Timer / New Year App
+# Note App
 
 ### Install dependencies first
 ```sh
@@ -14,4 +14,4 @@ npm start
 ```
 
 ##### App UI
-![Screenshot](./static/screenshot1.png)
+![Screenshot](./static/screenshot2.png)
