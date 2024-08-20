@@ -3,10 +3,15 @@ import { io } from "socket.io-client";
 let sio, connected = false;
 
 export const connectAndBind = () => {
+  const params = new URLSearchParams(window.location.search)
+  const uid = params.get('uid');
 
+  if(!uid) {
+    return;
+  }
   try {
     sio = io(process.env.REACT_APP_SERVER_URL, {
-      query: { uuid: window.uniqueId },
+      query: { uuid: uid },
     });
     sio.on("connect", () => {
       console.log("Client Connected");

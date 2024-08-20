@@ -5,9 +5,6 @@ const { serverUp } = require("./server");
 const { init } = require("./manager");
 const { Initializer } = require('./models/base/WindowManager');
 //const SHMLoader = require("./client/src/ee");
-const SHMLoader  = require('./client/src/ee');
-
-const StoreEmitter = require('./client/src/se');
 
 let tray = null
 async function createWindow() {

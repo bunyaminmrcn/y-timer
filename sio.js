@@ -1,8 +1,8 @@
 //
 const { Server } = require('socket.io');
 const {Timer}  = require('./models/base/Timer');
-const { shm  } = global;
-const store = require('./client/src/se');
+
+
 
 const bindIO = (server) => {
     const io = new Server(server, {
@@ -18,20 +18,7 @@ const bindIO = (server) => {
 
 
         if(socket.handshake.query) {
-
             console.log({q: socket.handshake.query.uuid})
-
-            if(store.getInstance()){
-                const props = store.getInstance().filter('confs', 'uniqueId', socket.handshake.query.uuid);
-                //console.log({ props })
-                if(props) {
-                    socket.emit('sync_props', {...(props.payload)});
-                }
-                
-            } else {
-                console.log('cannot access to store')
-            }
-            
         }
         socket.on('notify', (data) => {
             //Emitter.emit('on_notify', data)

@@ -12,7 +12,7 @@ class Initializer {
 const { BrowserWindow, ipcMain, app } = require("electron");
 const knexORM = require('../../conf/db-init');
 const path = require('path');
-const store = require('../../client/src/se');
+const { serialize }= require('../../lib/helper')
 
 const { v4 } = require('uuid');
 
@@ -62,12 +62,13 @@ class WM {
 
 
                     const v4_ = v4()
-                    this.confs.push({ uniqueId: v4_, payload: { title, textContent } })
-                    noteWindow.webContents.on("did-finish-load", () => {
-                        noteWindow.webContents.executeJavaScript("window.uniqueId = '" + v4_ + "'; window[`_`] = '" + v4_ + "'")
-                    })
 
-                    noteWindow.loadURL('http://localhost:3206', {
+                    const urlParams = serialize({
+                        uid: v4_,
+                        title,
+                        textContent
+                    })
+                    noteWindow.loadURL(`http://localhost:3206?${urlParams}`, {
                         extraHeaders: `Content-Security-Policy: default-src 'self'`
                     })
 
@@ -75,12 +76,7 @@ class WM {
                     //noteWindow.webContents.openDevTools()
                 }
 
-                if (store.getInstance()) {
-                    store.getInstance().set('confs', this.confs)
-                    console.log('SETTT SCUCCESS');
-                } else {
-                    console.log('Cannot aceess to SOTRE')
-                }
+                
             }
         } catch (error) {
 

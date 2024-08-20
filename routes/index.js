@@ -1,10 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const knexORM = require('../conf/db-init')
 
-
-router.get('/', async (req, res) => {
-    const timers = await knexORM.select().from('timers')
-    return res.json({ timers })
-})
+router.use('/notes', require('./notes.route'))
+router.use('/timers', require('./timers.route'))
 module.exports = router;

@@ -4,13 +4,14 @@ import "./index.css";
 import App from "./modules/note/App";
 import reportWebVitals from "./reportWebVitals";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
-import { listen } from './shm-core';
+import { connectAndBind } from "./sio-client";
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const RootApp = () => {
   const listen_core = async () => {
-    listen();
+    connectAndBind();
   }
   useEffect(() => {
     listen_core()

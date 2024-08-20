@@ -69,6 +69,11 @@ document.body.appendChild(windowTopBar)
 const EventListeners = [];
 import { getSioClient, listenEvents } from '../../sio-client';
 
+import { SelectTabData, SelectTabEvent, TabList, Tab } from '@fluentui/react-components';
+import { CalendarMonthRegular } from '@fluentui/react-icons';
+
+
+
 export default function App({ }) {
   const [markdown, setMarkdown] = useState('*hep*');
   const [initialMarkdown, setInitialMarkdown] = useState(markdown)
@@ -76,6 +81,12 @@ export default function App({ }) {
   const [title_, setTitle_] = useState('');
   const styles = useStyles();
   const labelId = useId("type-label");
+  const [selectedValue, setSelectedValue] = React.useState('tab1');
+
+  const onTabSelect = (event, data) => {
+    console.log(`The ${data.value} tab was selected`);
+    setSelectedValue(data.value);
+  };
 
   const [isOpen, setIsOpen] = React.useState(false);
   const [type, setType] = React.useState("overlay");
@@ -87,7 +98,7 @@ export default function App({ }) {
 
   useEffect(() => {
     const sio = getSioClient();
-    if(sio) {
+    if (sio) {
       listenEvents('sync_props', (data) => {
         setTitle_(data.title)
         setMarkdown(data.textContent)
@@ -135,59 +146,91 @@ export default function App({ }) {
         </DrawerBody>
       </Drawer>
 
-      <div className={styles.content}>
-        <Button appearance="primary" onClick={() => setIsOpen(!isOpen)}>
-          {type === "inline" ? "Toggle" : "Open"}
-        </Button>
+      <TabList selectedValue={selectedValue} onTabSelect={onTabSelect}>
+        <Tab value="tab1">
+          Tab1
+        </Tab>
 
-        <div className={styles.field}>
-          <Label id={labelId}>Type</Label>
-          <RadioGroup
-            value={type}
-            onChange={(_, data) => setType(data.value)}
-            aria-labelledby={labelId}
-          >
-            <Radio value="overlay" label="Overlay (Default)" />
-            <Radio value="inline" label="Inline" />
-          </RadioGroup>
+        <Tab value="tab2">
+          Tab2
+        </Tab>
+        <Tab value='tab3'>
+          Tab3
+        </Tab>
+      </TabList>
+
+      {
+        selectedValue == 'tab1' && <div className={styles.content}>
+          <Button appearance="primary" onClick={() => setIsOpen(!isOpen)}>
+            {type === "inline" ? "Toggle" : "Open"}
+          </Button>
+
+          <div className={styles.field}>
+            <Label id={labelId}>Type</Label>
+            <RadioGroup
+              value={type}
+              onChange={(_, data) => setType(data.value)}
+              aria-labelledby={labelId}
+            >
+              <Radio value="overlay" label="Overlay (Default)" />
+              <Radio value="inline" label="Inline" />
+            </RadioGroup>
+          </div>
         </div>
-      </div>
+      }
+      {
+        selectedValue == 'tab2' &&
+
+        <Preview markdown={markdown} />
+      }
+      {
+        selectedValue == 'tab3' && <form spellCheck={false} style={{ width: 'auto', height: 'auto' }}>
+          <textarea aria-multiline="true" className="mainText" id="main" value={markdown}
+          cols={'12'}
+          rows={'12'}
+
+            onFocus={() => setEnabled(false)}
+            onBlur={() => {
+              setEnabled(true)
+            }
+            }
+            onChange={(evt) => {
+              setMarkdown(evt.nativeEvent.target.value)
+            }}></textarea>
+        </form>
+      }
     </div>
 
-    {
-      <Markdown remarkPlugins={[remarkGfm]}
-        //children={post.content}
-        components={{
-          code({ node, inline, className, children, ...props }) {
-            const match = /language-(\w+)/.exec(className || '')
-            return !inline && match ? (
-              <SyntaxHighlighter
-                children={String(children).replace(/\n$/, '')}
-                language={match[1]}
-                style={oneLight}
-                {...props}
-              />
-            ) : (
-              <code className={className} {...props}>
-                {children}
-              </code>
-            )
-          },
-        }}>{markdown}</Markdown>
-    }
 
-    <form spellCheck={false} style={{ width: 'auto', height: 'auto' }}>
-      <textarea aria-multiline="true" className="mainText" id="main" value={markdown}
 
-        onFocus={() => setEnabled(false)}
-        onBlur={() => {
-          setEnabled(true)
-        }
-        }
-        onChange={(evt) => {
-          setMarkdown(evt.nativeEvent.target.value)
-        }}></textarea>
-    </form>
+
+
+
+
   </>
   );
+}
+
+const Preview = ({ markdown }) => {
+
+
+  return (<Markdown remarkPlugins={[remarkGfm]}
+    //children={post.content}
+    components={{
+      code({ node, inline, className, children, ...props }) {
+        const match = /language-(\w+)/.exec(className || '')
+        return !inline && match ? (
+          <SyntaxHighlighter
+            children={String(children).replace(/\n$/, '')}
+            language={match[1]}
+            style={oneLight}
+            {...props}
+          />
+        ) : (
+          <code className={className} {...props}>
+            {children}
+          </code>
+        )
+      }
+    }}>{markdown}</Markdown>)
 }
